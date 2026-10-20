@@ -17,12 +17,18 @@ def compter_erreurs(evt: Evenement, compteur: dict) -> int:
     return 0
   
   
-def chercher_procedures(evt: Evenement, base: dict) -> list: 
-    raise NotImplementedError 
-  
-  
-def classifier(evt: Evenement, nb_erreurs: int = 0) -> str: 
-    raise NotImplementedError 
+def chercher_procedures(evt: Evenement, base: dict) -> list:
+    trouvees = []
+    msg_min = evt.message.lower()
+    for mot_cle, procedure in base.items():
+        if mot_cle.lower() in msg_min:
+            trouvees.append(procedure)
+    return trouvees
+
+def classifier(evt: Evenement, nb_erreurs: int = 0) -> str:
+    if nb_erreurs >= 3:
+        return "CRITICAL"
+    return evt.severity
   
   
 def analyser(evt: Evenement, base: dict, nb_erreurs: int = 0) -> Analyse: 
