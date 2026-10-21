@@ -26,6 +26,9 @@ class TestExtraction(unittest.TestCase):
         evt = normaliser_pipeline(rap, 2)
         self.assertEqual(evt.event_type, "PIPELINE_FAILURE")
         self.assertEqual(evt.severity, "HIGH")
+    def test_bearer(self):
+        self.assertEqual(masquer_secrets("Authorization: Bearer eyJ.abc-1"),
+                     "Authorization: Bearer [SECRET]")
 
 if __name__ == '__main__':
     unittest.main()
