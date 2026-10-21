@@ -2,8 +2,15 @@ import re
 from src.contrat import Evenement
 
 def masquer_secrets(texte: str) -> str:
-    pattern = re.compile(r'\b(password|passwd|token|secret|api_key|apikey)\s*[=:]\s*[^ &;,]+', re.IGNORECASE)
-    return pattern.sub(r'\1=[SECRET]', texte)
+    # 1. Masquage classique (mots de passe, tokens habituels...)
+    pattern_classique = re.compile(r'\b(password|passwd|token|secret|api_key|apikey)\s*[=:]\s*[^ &;,]+', re.IGNORECASE)
+    texte = pattern_classique.sub(r'\1=[SECRET]', texte)
+    
+    # 2. Masquage d'urgence ajouté pour le jeton Bearer (Hotfix)
+    pattern_bearer = re.compile(r'Bearer\s+[^\s]+', re.IGNORECASE)
+    texte = pattern_bearer.sub('Bearer [SECRET]', texte)
+    
+    return texte
 
 def normaliser_log(ligne: str, numero: int, source: str = "DOCKER", environment: str = "production") -> Evenement:
     parts = ligne.split(maxsplit=4)
