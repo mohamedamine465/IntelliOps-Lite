@@ -24,3 +24,9 @@ class TestNotification(unittest.TestCase):
         
         _, a_non_sensible = exemple(sensible=False)
         self.assertTrue(valider_action(a_non_sensible, "n'importe quoi"))
+    def test_rediger(self):
+        e, a = exemple()
+        texte = rediger(e, a)
+        self.assertIn("[CRITICAL] Composant : backend", texte)
+        self.assertIn("Evenement : OOMKilled restarts=14", texte)
+        self.assertIn("Sources : DOCKER", texte)

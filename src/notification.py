@@ -12,7 +12,14 @@ def choisir_canal(niveau: str) -> str:
     return canaux[niveau]
 
 def rediger(evt: Evenement, analyse: Analyse) -> str:
-    raise NotImplementedError
+    sources_str = ", ".join(analyse.sources)
+    return (
+        f"[{analyse.level}] Composant : {evt.component}\n"
+        f"Evenement : {evt.message}\n"
+        f"Explication : {analyse.explanation}\n"
+        f"Action proposee : {analyse.action}\n"
+        f"Sources : {sources_str}"
+    )
 
 def notifier(evt: Evenement, analyse: Analyse, historique: list) -> Notification:
     raise NotImplementedError
