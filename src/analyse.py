@@ -1,10 +1,19 @@
 from src.contrat import Analyse, Evenement
 
+from src.contrat import Analyse, Evenement
+
 def est_doublon(evt: Evenement, vus: set) -> bool:
-    raise NotImplementedError
+    cle = (evt.timestamp, evt.source, evt.component, evt.event_type, evt.message)
+    if cle in vus:
+        return True
+    vus.add(cle)
+    return False
 
 def compter_erreurs(evt: Evenement, compteur: dict) -> int:
-    raise NotImplementedError
+    if evt.event_type == "LOG" and evt.severity in ["HIGH", "CRITICAL"]:
+        compteur[evt.component] = compteur.get(evt.component, 0) + 1
+        return compteur[evt.component]
+    return 0
 
 def chercher_procedures(evt: Evenement, base: dict) -> list:
     raise NotImplementedError
