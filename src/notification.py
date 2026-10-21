@@ -22,7 +22,13 @@ def rediger(evt: Evenement, analyse: Analyse) -> str:
     )
 
 def notifier(evt: Evenement, analyse: Analyse, historique: list) -> Notification:
-    raise NotImplementedError
+    canal = choisir_canal(analyse.level)
+    texte = rediger(evt, analyse)
+    notif = Notification(evt.id, canal, "equipe-ops", texte)
+    
+    historique.append(notif)
+    evt.status = "NOTIFIED"
+    return notif
 
 def valider_action(analyse: Analyse, reponse: str) -> bool:
     if not analyse.sensitive:
@@ -31,6 +37,13 @@ def valider_action(analyse: Analyse, reponse: str) -> bool:
     rep = reponse.strip().lower()
     return rep in ["o", "oui", "ok", "yes"]
 
-def tracer_decision(analyse: Analyse, approuve: bool, acteur: str,
-    journal: list, horodatage: str) -> dict:
-    raise NotImplementedError
+def tracer_decision(analyse: Analyse, approuve: bool, acteur: str, journal: list, horodatage: str) -> dict:
+    trace = {
+        "event_id": analyse.event_id,
+        "action": analyse.action,
+        "approved": approuve,
+        "actor": acteur,
+        "timestamp": horodatage
+    }
+    journal.append(trace)
+    return trace

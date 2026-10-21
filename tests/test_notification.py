@@ -30,3 +30,25 @@ class TestNotification(unittest.TestCase):
         self.assertIn("[CRITICAL] Composant : backend", texte)
         self.assertIn("Evenement : OOMKilled restarts=14", texte)
         self.assertIn("Sources : DOCKER", texte)
+
+    def test_notifier(self):
+        e, a = exemple()
+        historique = []
+        notif = notifier(e, a, historique)
+        
+        self.assertEqual(notif.channel, "TEAMS")
+        self.assertEqual(notif.recipient, "equipe-ops")
+        self.assertEqual(len(historique), 1)
+        self.assertEqual(e.status, "NOTIFIED")
+
+    def test_tracer_decision(self):
+        _, a = exemple()
+        journal = []
+        trace = tracer_decision(a, True, "ops-oncall", journal, "2026-10-05T10:05:00Z")
+        
+        self.assertEqual(len(journal), 1)
+        self.assertEqual(trace["actor"], "ops-oncall")
+        self.assertTrue(trace["approved"])
+
+if __name__ == '__main__':
+    unittest.main()
